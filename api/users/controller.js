@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const { locale } = require('../../locale');
 const { config } = require('../../config');
 const User = require('./model');
 
 const list = async (req, res) => {
-  const users = await User.find({}, ['name', 'lastname']);
+  const users = await User.find({}, ['name', 'username']);
   res.status(200).json(users);
 };
 
@@ -78,9 +79,9 @@ const login = async (req, res) => {
     password,
   };
 
-  const userFound = await User.findOne({ username: user.username, password: user.password }).exec();
+  const auth = await validateAuth(user);
 
-  if (userFound) {
+  if (auth) {
     const token = jwt.sign({ username: user.username }, config.jwtKey);
     res.status(200).json({ token });
   } else {
@@ -92,15 +93,34 @@ const remove = async (req, res) => {
   const { username } = req.body;
   const userFind = await User.findOne({ username }).exec();
 
-  if (userFind) {
-    const userDeleted = await User.deleteOne({ _id: userFind._id });
+  const userDeleted = await User.deleteOne({ _id: userFind._id });
 
-    userDeleted.ok === 1
-      ? res.status(200).json()
-      : res.status(500).json({ message: `${locale.translate('errors.userNoDeleted')} ${username}` });
+  userDeleted.ok === 1
+    ? res.status(200).json( {message: locale.translate('errors.userDeleted') })
+    : res.status(500).json({ message: `${locale.translate('errors.userNoDeleted')} ${username}` });
+};
+
+const validateAuth = async (user) =>{    
+  const userFound = await findUser(user);
+  
+  if (userFound) {
+      const compare = bcrypt.compareSync(user.password, userFound.password);
+      return compare;
   } else {
-    res.status(500).json({ message: `${locale.translate('errors.userNotExist')} ${usernameParam}` });
+      return false;
   }
+};
+
+const findUser = async (user) => {
+  const userFound = await User.findOne({ username: user.username })
+                              .then(user =>{
+                                  return user;
+                              })
+                              .catch( err => {
+                                  console.error(err);
+                              });
+
+  return userFound;
 };
 
 module.exports = {

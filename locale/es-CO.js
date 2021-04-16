@@ -6,6 +6,7 @@ const dictionaryESCO = {
       userExist: 'Email y/o username ya se encuentra registrado',
       userNoUpdated: 'No se pudo actualziar el usuario ',
       userNoDeleted: 'No se pudo eliminar el usuario ',
+      userDeleted: 'Usuario eliminado',
       userNotExist: 'No existe el usuario ',
     },
   };

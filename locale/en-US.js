@@ -6,6 +6,7 @@ const dictionaryENUS = {
       userExist: 'Email and/or username is already registered',
       userNoUpdated: 'Unable to update the user ',
       userNoDeleted: 'Unable to delete the user ',
+      userDeleted: 'User deleted',
       userNotExist: 'There is no user ',
     },
   };

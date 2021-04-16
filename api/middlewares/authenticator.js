@@ -15,7 +15,7 @@ const authenticator = (req, res, next) => {
   } catch (error) {
     res
       .status(401)
-      .json({ message: locale.translate('errors.userNotAuth') });
+      .json({ message: locale.translate('errors.notAuthenticated') });
   }
 };
 
