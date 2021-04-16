@@ -1,10 +1,13 @@
-const logger = (req, res, next) =>{
-    const dateTime = new Date().toLocaleString();    
-    const {ip = '', method = '', hostname = '', path = '', body = {} } = req;
-    
-    console.log(`${dateTime} :: ${method} ::${hostname} :: ${path} :: ${body && JSON.stringify(body)} :: ${ip}`);
+const logger = (req, res, next) => {
+  const dateTime = new Date().toLocaleString();
+  const {
+    ip = '', method = '', hostname = '', path = '', body = {},
+  } = req;
 
-    next();
+  /* eslint-disable no-console */
+  console.log(`${dateTime} :: ${method} ::${hostname} :: ${path} :: ${body && JSON.stringify(body)} :: ${ip}`);
+  /* eslint-enable no-console */
+  next();
 };
 
-module.exports = { logger }
+module.exports = { logger };

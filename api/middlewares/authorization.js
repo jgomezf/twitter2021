@@ -1,13 +1,13 @@
-const { locale } = require('./../../locale');
+const { locale } = require('../../locale');
 
-const usersAuthorization = (req,res,next) => {
-    const { username, authUsername } = req.body;
+const usersAuthorization = (req, res, next) => {
+  const { username, authUsername } = req.body;
 
-    if (username === authUsername) {
-        next()
-    } else {
-        res.status(500).json({ message: locale.translate('errors.notAuthorized') });
-    }
-}
+  if (username === authUsername) {
+    next();
+  } else {
+    res.status(500).json({ message: locale.translate('errors.notAuthorized') });
+  }
+};
 
-module. exports = { usersAuthorization };
+module.exports = { usersAuthorization };

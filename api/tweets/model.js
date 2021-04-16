@@ -1,5 +1,5 @@
 const tweets = [
-    
+
 ];
 
-module.exports = {tweets};
+module.exports = { tweets };
