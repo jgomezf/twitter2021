@@ -10,7 +10,7 @@ const init = async () => {
     };
     await mongoose.connect(config.database.connectionString, options, () => {
         /* eslint-disable no-console */
-        console.log("connected to the databse");
+        console.log("connected to the database");
         /* eslint-enable no-console */
     });
 }

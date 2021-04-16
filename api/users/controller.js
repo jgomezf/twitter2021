@@ -1,31 +1,41 @@
 const jwt = require('jsonwebtoken');
-const { config } = require('../../config');
-let { users } = require('./model');
+const bcrypt = require('bcrypt');
 
-const list = (req, res) => {
-  res.status(200).json(users);
+const { locale } = require('../../locale');
+const { config } = require('../../config');
+const User = require('./model');
+
+const list = async (req, res) => {
+  const users = await User.find({}, ['name', 'lastname']);
+      res.status(200).json(users);
 };
 
-const create = (req, res) => {
+const create = async (req, res) => {
   const {
     name, email, username, password,
   } = req.body;
+  const salt = bcrypt.genSaltSync(config.saltRounds);
+  const passwordHash = bcrypt.hashSync(password, salt);
 
   const user = {
     name,
     email,
     username,
-    password,
+    password: passwordHash,
   };
 
-  const found = users.filter((u) => u.username === user.username); // [], [{}]
+  //pendiente validar si existe el username
+  
+  const newUser = new User(user);
+  await newUser.save();
 
-  if (found && found.length > 0) {
-    res.status(500).json({ message: `ya existe el usuario ${user.username}` });
-  } else {
-    users.push(user);
-    res.status(201).json(users);
+  try {
+    const users = await User.find({}, ['name', 'username']);
+      res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
   }
+
 };
 
 const update = (req, res) => {
