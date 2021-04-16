@@ -32,14 +32,14 @@ const create = async (req, res) => {
   await newUser.save();
 
   try {
-    const userCreated = await User.find({ $and: [{ username }, { email }] }, ['email', 'username']).exec();
+    const userCreated = await User.find({ $and: [{ username }, { email }] }, ['name', 'email', 'username']).exec();
     res.status(200).json(userCreated);
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-const update = (req, res) => {
+const update = async (req, res) => {
   const usernameParam = req.params.username;
   const {
     name, email, username, password,
@@ -53,11 +53,11 @@ const update = (req, res) => {
       password,
     };
 
-    const position = User.findIndex((u) => u.username === usernameParam);
+    let userFind = await User.find({ username }).exec();
 
-    if (position !== -1) {
-      User[position] = user;
-      res.status(204).json(User);
+    if (userFind.length > 0) {
+      const userUpdated = userFind.updateOne(user);
+      res.status(204).json(userUpdated);
     } else {
       res.status(500).json({ message: `No existe el usuario ${usernameParam}` });
     }
