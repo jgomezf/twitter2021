@@ -11,6 +11,9 @@ const config = {
     },
     jwtKey: process.env.JWTKEY,
     apiWeatherKey: process.env.APIWEATHERKEY,
+    database: {
+        connectionString: process.env.DB_CONNECTION_STRING,
+    },
 };
 
 
