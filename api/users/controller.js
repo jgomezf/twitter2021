@@ -24,7 +24,7 @@ const create = async (req, res) => {
   const userFind = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']).exec();
   
   if (userFind.length > 0) {
-    res.status(500).json({ message: locale.translate('errors.userExists') });
+    res.status(500).json({ message: locale.translate('errors.userExist') });
     return;
   }
 
@@ -53,16 +53,19 @@ const update = async (req, res) => {
       password,
     };
 
-    let userFind = await User.find({ username }).exec();
+    let userFind = await User.findOne({ username: usernameParam }).exec();
 
-    if (userFind.length > 0) {
-      const userUpdated = userFind.updateOne(user);
-      res.status(204).json(userUpdated);
+    if (userFind) {
+      const userUpdated = await User.updateOne({ _id: userFind._id },{ $set: { name: user.name, email: user.email, password: user.password } });
+
+      userUpdated.ok === 1 
+        ? res.status(204).json()
+        : res.status(500).json({ message: `${locale.translate('errors.userNoUpdated')} ${usernameParam}` });
     } else {
-      res.status(500).json({ message: `No existe el usuario ${usernameParam}` });
+      res.status(500).json({ message: `${locale.translate('errors.userNotExist')} ${usernameParam}` });
     }
   } else {
-    res.status(500).json({ message: 'Hay datos nulos' });
+    res.status(500).json({ message: locale.translate('errors.invalidData') });
   }
 };
 

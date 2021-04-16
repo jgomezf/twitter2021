@@ -3,7 +3,9 @@ const dictionaryENUS = {
       notAuthorized: 'unauthorized',
       notAuthenticated: 'user not authorized',
       invalidData: 'invalid data',
-      userExists: 'Email and/or username is already registered',
+      userExist: 'Email and/or username is already registered',
+      userNoUpdated: 'Unable to update the user ',
+      userNotExist: 'There is no user ',
     },
   };
   

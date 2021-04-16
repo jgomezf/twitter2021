@@ -13,12 +13,24 @@ const schema = new mongoose.Schema({
 });
 
 // hashes the password
-schema.pre(['save', 'updateOne'], function (next) {
+schema.pre('save', function (next) {
   bcrypt.hash(this.password, config.saltRounds, (err, hash) => {
     if (err) {
       return next(err);
     }
     this.password = hash;
+    next();
+  });
+});
+
+schema.pre('updateOne', function (next) {
+  const data = this.getUpdate()['$set'];
+
+  bcrypt.hash(data.password, config.saltRounds, (err, hash) => {
+    if (err) {
+      return next(err);
+    }
+    data.password = hash;
     next();
   });
 });

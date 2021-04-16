@@ -3,7 +3,9 @@ const dictionaryESCO = {
       notAuthorized: 'no autorizado',
       notAuthenticated: 'no autenticado',
       invalidData: 'datos no válidos',
-      userExists: 'Email y/o username ya se encuentra registrado',
+      userExist: 'Email y/o username ya se encuentra registrado',
+      userNoUpdated: 'No se pudo actualziar el usuario ',
+      userNotExist: 'No existe el usuario ',
     },
   };
   
