@@ -20,9 +20,9 @@ const create = async (req, res) => {
     username,
     password,
   };
-  
+
   const userFind = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']).exec();
-  
+
   if (userFind.length > 0) {
     res.status(500).json({ message: locale.translate('errors.userExist') });
     return;
@@ -53,10 +53,11 @@ const update = async (req, res) => {
       password,
     };
 
-    let userFind = await User.findOne({ username: usernameParam }).exec();
+    const userFind = await User.findOne({ username: usernameParam }).exec();
 
     if (userFind) {
-      const userUpdated = await User.updateOne({ _id: userFind._id },{ $set: { name: user.name, email: user.email, password: user.password } });
+      const userUpdated = await User.updateOne({ _id: userFind._id },
+        { $set: { name: user.name, email: user.email, password: user.password } });
 
       userUpdated.ok === 1 
         ? res.status(204).json()
@@ -69,7 +70,7 @@ const update = async (req, res) => {
   }
 };
 
-const login = (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body;
 
   const user = {
@@ -77,9 +78,9 @@ const login = (req, res) => {
     password,
   };
 
-  const found = User.filter((u) => u.username === user.username && u.password === user.password);
+  const userFound = await User.findOne({ username: user.username, password: user.password }).exec();
 
-  if (found && found.length > 0) {
+  if (userFound) {
     const token = jwt.sign({ username: user.username }, config.jwtKey);
     res.status(200).json({ token });
   } else {
@@ -87,11 +88,19 @@ const login = (req, res) => {
   }
 };
 
-const remove = (req, res) => {
-  // const { username } = req.body;
-  // User = User.filter((u) => u.username !== username);
+const remove = async (req, res) => {
+  const { username } = req.body;
+  const userFind = await User.findOne({ username }).exec();
 
-  res.status(200).json({});
+  if (userFind) {
+    const userDeleted = await User.deleteOne({ _id: userFind._id });
+
+    userDeleted.ok === 1
+      ? res.status(200).json()
+      : res.status(500).json({ message: `${locale.translate('errors.userNoDeleted')} ${username}` });
+  } else {
+    res.status(500).json({ message: `${locale.translate('errors.userNotExist')} ${usernameParam}` });
+  }
 };
 
 module.exports = {
