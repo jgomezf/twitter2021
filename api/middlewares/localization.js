@@ -4,7 +4,7 @@ const localization = (req, res, next) => {
   const reqLocale = req.headers.locale;
   if (reqLocale) {
     locale.setCurrentLocale(reqLocale);
-  } 
+  }
 
   next();
 };

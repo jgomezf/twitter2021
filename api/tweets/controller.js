@@ -14,7 +14,7 @@ const create = (req, res) => {
     date,
   };
 
-  users.push(tweet);
+  tweets.push(tweet);
   res.status(201).json(tweets);
 };
 

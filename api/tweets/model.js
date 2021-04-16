@@ -12,4 +12,3 @@ const schema = new mongoose.Schema({
 const model = mongoose.model(collection, schema);
 
 module.exports = { model };
-

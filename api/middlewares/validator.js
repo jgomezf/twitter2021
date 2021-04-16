@@ -36,7 +36,7 @@ const validateTweet = (req, res, next) => {
   }
 };
 
-const validatUser = (req, res, next) => {
+const validateUser = (req, res, next) => {
   const {
     name, email, username, password, passwordConfirmation,
   } = req.body;
@@ -76,4 +76,4 @@ const validatUser = (req, res, next) => {
   }
 };
 
-module.exports = { validatUser, validateLogin, validateTweet };
+module.exports = { validateUser, validateLogin, validateTweet };

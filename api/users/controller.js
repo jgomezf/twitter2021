@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
 const { locale } = require('../../locale');
 const { config } = require('../../config');
@@ -7,35 +6,37 @@ const User = require('./model');
 
 const list = async (req, res) => {
   const users = await User.find({}, ['name', 'lastname']);
-      res.status(200).json(users);
+  res.status(200).json(users);
 };
 
 const create = async (req, res) => {
   const {
     name, email, username, password,
   } = req.body;
-  const salt = bcrypt.genSaltSync(config.saltRounds);
-  const passwordHash = bcrypt.hashSync(password, salt);
 
   const user = {
     name,
     email,
     username,
-    password: passwordHash,
+    password,
   };
-
-  //pendiente validar si existe el username
   
+  const userFind = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']).exec();
+  
+  if (userFind.length > 0) {
+    res.status(500).json({ message: locale.translate('errors.userExists') });
+    return;
+  }
+
   const newUser = new User(user);
   await newUser.save();
 
   try {
-    const users = await User.find({}, ['name', 'username']);
-      res.status(200).json(users);
+    const userCreated = await User.find({ $and: [{ username }, { email }] }, ['email', 'username']).exec();
+    res.status(200).json(userCreated);
   } catch (error) {
     res.status(500).json(error);
   }
-
 };
 
 const update = (req, res) => {
@@ -52,11 +53,11 @@ const update = (req, res) => {
       password,
     };
 
-    const position = users.findIndex((u) => u.username === usernameParam);
+    const position = User.findIndex((u) => u.username === usernameParam);
 
     if (position !== -1) {
-      users[position] = user;
-      res.status(204).json(users);
+      User[position] = user;
+      res.status(204).json(User);
     } else {
       res.status(500).json({ message: `No existe el usuario ${usernameParam}` });
     }
@@ -73,7 +74,7 @@ const login = (req, res) => {
     password,
   };
 
-  const found = users.filter((u) => u.username === user.username && u.password === user.password);
+  const found = User.filter((u) => u.username === user.username && u.password === user.password);
 
   if (found && found.length > 0) {
     const token = jwt.sign({ username: user.username }, config.jwtKey);
@@ -84,10 +85,10 @@ const login = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const { username } = req.body;
-  users = users.filter((u) => u.username !== username);
+  // const { username } = req.body;
+  // User = User.filter((u) => u.username !== username);
 
-  res.status(200).json(users);
+  res.status(200).json({});
 };
 
 module.exports = {
