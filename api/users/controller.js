@@ -6,10 +6,11 @@ const { config } = require('../../config');
 const User = require('./model');
 
 const list = async (req, res) => {
-  const users = await User.find({}, ['name', 'username']);
+  const users = await User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt']);
   res.status(200).json(users);
 };
 
+//Create User
 const create = async (req, res) => {
   const {
     name, email, username, password,
@@ -33,13 +34,14 @@ const create = async (req, res) => {
   await newUser.save();
 
   try {
-    const userCreated = await User.find({ $and: [{ username }, { email }] }, ['name', 'email', 'username']).exec();
+    const userCreated = await User.find({ $and: [{ username }, { email }, { active: true }] }, ['name', 'email', 'username']);
     res.status(200).json(userCreated);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error});
   }
 };
 
+//Update User
 const update = async (req, res) => {
   const usernameParam = req.params.username;
   const {
@@ -54,7 +56,7 @@ const update = async (req, res) => {
       password,
     };
 
-    const userFind = await User.findOne({ username: usernameParam }).exec();
+    const userFind = await findUserByUsername(usernameParam);
 
     if (userFind) {
       const userUpdated = await User.updateOne({ _id: userFind._id },
@@ -71,6 +73,7 @@ const update = async (req, res) => {
   }
 };
 
+//Login User
 const login = async (req, res) => {
   const { username, password } = req.body;
 
@@ -89,9 +92,10 @@ const login = async (req, res) => {
   }
 };
 
+//Remove User
 const remove = async (req, res) => {
   const { username } = req.body;
-  const userFind = await User.findOne({ username }).exec();
+  const userFind = await findUserByUsername(username);
 
   const userDeleted = await User.deleteOne({ _id: userFind._id });
 
@@ -100,8 +104,9 @@ const remove = async (req, res) => {
     : res.status(500).json({ message: `${locale.translate('errors.userNoDeleted')} ${username}` });
 };
 
+//validate User
 const validateAuth = async (user) =>{    
-  const userFound = await findUser(user);
+  const userFound = await findUserByUsername(user.username);
   
   if (userFound) {
       const compare = bcrypt.compareSync(user.password, userFound.password);
@@ -111,8 +116,9 @@ const validateAuth = async (user) =>{
   }
 };
 
-const findUser = async (user) => {
-  const userFound = await User.findOne({ username: user.username })
+//Find User By Username
+const findUserByUsername = async (username) => {
+  const userFound = await User.findOne({ username })
                               .then(user =>{
                                   return user;
                               })
@@ -123,6 +129,7 @@ const findUser = async (user) => {
   return userFound;
 };
 
+//Export Module
 module.exports = {
   list, create, update, login, remove,
 };

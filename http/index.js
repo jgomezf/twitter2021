@@ -11,7 +11,11 @@ app.use('/api/v1', api);
 
 
 const init = () => {
-    app.listen(port, () => console.log(`Servidor iniciado en el puerto ${port}`));
+    app.listen(port, () => 
+    /* eslint-disable no-console */
+    console.log(`Server Started on port: ${port}`));
+    /* eslint-enable no-console */
+
 }
 
 module.exports = { init };
