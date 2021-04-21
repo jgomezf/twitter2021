@@ -23,22 +23,22 @@ const create = async (req, res) => {
     password,
   };
 
-  const userFind = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']).exec();
+  const findUser = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']);
 
-  if (userFind.length > 0) {
-    res.status(500).json({ message: locale.translate('errors.user.userExist') });
+  if (findUser.length > 0) {
+    res.status(500).json({ message: locale.translate('errors.user.userExists') });
     return;
   }
 
   const newUser = new User(user);
-  await newUser.save();
-
-  try {
-    const userCreated = await User.find({ $and: [{ username }, { email }, { active: true }] }, ['name', 'email', 'username']);
-    res.status(200).json(userCreated);
-  } catch (error) {
-    res.status(500).json({ message: error});
-  }
+  
+  await newUser.save()
+    .then((userCretaed) => {
+      res.status(200).json(userCretaed);
+    })
+    .catch(() => {
+      res.status(500).json({ message: locale.translate('errors.user.onCreate')});
+    });
 };
 
 //Update User
@@ -64,7 +64,7 @@ const update = async (req, res) => {
 
       userUpdated.ok === 1 
         ? res.status(204).json()
-        : res.status(500).json({ message: `${locale.translate('errors.user.userNoUpdated')} ${usernameParam}` });
+        : res.status(500).json({ message: `${locale.translate('errors.user.onUpdate')} ${usernameParam}` });
     } else {
       res.status(500).json({ message: `${locale.translate('errors.user.userNotExist')} ${usernameParam}` });
     }
@@ -101,7 +101,7 @@ const remove = async (req, res) => {
 
   userDeleted.ok === 1
     ? res.status(200).json( {message: locale.translate('errors.user.userDeleted') })
-    : res.status(500).json({ message: `${locale.translate('errors.user.userNoDeleted')} ${username}` });
+    : res.status(500).json({ message: `${locale.translate('errors.user.onDelete')} ${username}` });
 };
 
 //validate User

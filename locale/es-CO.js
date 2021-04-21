@@ -4,9 +4,10 @@ const dictionaryESCO = {
       user: {
         notAuthorized: 'no autorizado',
         notAuthenticated: 'no autenticado',
-        userExist: 'Email y/o username ya se encuentra registrado',
-        userNoUpdated: 'No se pudo actualziar el usuario ',
-        userNoDeleted: 'No se pudo eliminar el usuario ',
+        userExists: 'Email o username ya se encuentra registrado',
+        onCreate: 'No se pudo crear el usuario',
+        onUpdate: 'No se pudo actualziar el usuario ',
+        onDelete: 'No se pudo eliminar el usuario ',
         userDeleted: 'Usuario eliminado',
         userNotExist: 'No existe el usuario ',
       }
