@@ -112,7 +112,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ userId: findUser._id }, config.jwtKey);
     res.status(200).json({ token });
   } else {
-    res.status(500).json({ message: 'User not exists or user and password don´t match' });
+    res.status(500).json({ message: locale.translate('errors.user.userNotExists') });
   }
 };
 
