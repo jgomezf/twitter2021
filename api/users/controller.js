@@ -107,7 +107,6 @@ const login = async (req, res) => {
   const findUser = await findUserByUsername(user.username);
   const auth = await validateAuth(findUser, user);
 
-  console.log(findUser._id);
   if (auth) {
     const token = jwt.sign({ userId: findUser._id }, config.jwtKey);
     res.status(200).json({ token });
