@@ -104,10 +104,12 @@ const login = async (req, res) => {
     password,
   };
 
-  const auth = await validateAuth(user);
+  const findUser = await findUserByUsername(user.username);
+  const auth = await validateAuth(findUser, user);
 
+  console.log(findUser._id);
   if (auth) {
-    const token = jwt.sign({ userId: auth._id }, config.jwtKey);
+    const token = jwt.sign({ userId: findUser._id }, config.jwtKey);
     res.status(200).json({ token });
   } else {
     res.status(500).json({ message: 'User not exists or user and password don´t match' });
@@ -127,11 +129,9 @@ const remove = async (req, res) => {
 };
 
 //validate User
-const validateAuth = async (user) =>{    
-  const userFound = await findUserByUsername(user.username);
-  
-  if (userFound) {
-      const compare = bcrypt.compareSync(user.password, userFound.password);
+const validateAuth = async (findUser, userReq) =>{  
+  if (findUser) {
+      const compare = bcrypt.compareSync(userReq.password, findUser.password);
       return compare;
   } else {
       return false;
