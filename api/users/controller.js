@@ -26,7 +26,7 @@ const create = async (req, res) => {
   const userFind = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']).exec();
 
   if (userFind.length > 0) {
-    res.status(500).json({ message: locale.translate('errors.userExist') });
+    res.status(500).json({ message: locale.translate('errors.users.userExist') });
     return;
   }
 
@@ -64,9 +64,9 @@ const update = async (req, res) => {
 
       userUpdated.ok === 1 
         ? res.status(204).json()
-        : res.status(500).json({ message: `${locale.translate('errors.userNoUpdated')} ${usernameParam}` });
+        : res.status(500).json({ message: `${locale.translate('errors.users.userNoUpdated')} ${usernameParam}` });
     } else {
-      res.status(500).json({ message: `${locale.translate('errors.userNotExist')} ${usernameParam}` });
+      res.status(500).json({ message: `${locale.translate('errors.users.userNotExist')} ${usernameParam}` });
     }
   } else {
     res.status(500).json({ message: locale.translate('errors.invalidData') });
@@ -100,8 +100,8 @@ const remove = async (req, res) => {
   const userDeleted = await User.deleteOne({ _id: userFind._id });
 
   userDeleted.ok === 1
-    ? res.status(200).json( {message: locale.translate('errors.userDeleted') })
-    : res.status(500).json({ message: `${locale.translate('errors.userNoDeleted')} ${username}` });
+    ? res.status(200).json( {message: locale.translate('errors.users.userDeleted') })
+    : res.status(500).json({ message: `${locale.translate('errors.users.userNoDeleted')} ${username}` });
 };
 
 //validate User
