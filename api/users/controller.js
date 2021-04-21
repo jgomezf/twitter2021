@@ -6,8 +6,30 @@ const { config } = require('../../config');
 const User = require('./model');
 
 const list = async (req, res) => {
-  const users = await User.find({ active: true }, ['name', 'username', 'createdAt', 'updatedAt']);
-  res.status(200).json(users);
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+  
+
+  User.find({ active: true }
+    , ['name', 'username', 'createdAt', 'updatedAt'])
+    .limit(Number(limit))
+    .skip(skip)
+    .sort({ createdAt: -1})
+    .then(async (users) => {
+      const total = await User.estimatedDocumentCount();
+      const totalPages = Math.ceil(total / limit);
+      const hasMore = page < totalPages;
+
+      res.status(200).json({
+        hasMore,
+        totalPages,
+        total,
+        users,
+        currentPage: page,
+      });
+    });
+    
+
 };
 
 //Create User
@@ -85,7 +107,7 @@ const login = async (req, res) => {
   const auth = await validateAuth(user);
 
   if (auth) {
-    const token = jwt.sign({ username: user.username }, config.jwtKey);
+    const token = jwt.sign({ userId: auth._id }, config.jwtKey);
     res.status(200).json({ token });
   } else {
     res.status(500).json({ message: 'User not exists or user and password don´t match' });
