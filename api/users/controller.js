@@ -1,12 +1,39 @@
 const jwt = require('jsonwebtoken');
-const { config } = require('../../config');
-let { users } = require('./model');
+const bcrypt = require('bcrypt');
 
-const list = (req, res) => {
-  res.status(200).json(users);
+const { locale } = require('../../locale');
+const { config } = require('../../config');
+const User = require('./model');
+
+const list = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+  
+
+  User.find({ active: true }
+    , ['name', 'username', 'createdAt', 'updatedAt'])
+    .limit(Number(limit))
+    .skip(skip)
+    .sort({ createdAt: -1})
+    .then(async (users) => {
+      const total = await User.estimatedDocumentCount();
+      const totalPages = Math.ceil(total / limit);
+      const hasMore = page < totalPages;
+
+      res.status(200).json({
+        hasMore,
+        totalPages,
+        total,
+        users,
+        currentPage: page,
+      });
+    });
+    
+
 };
 
-const create = (req, res) => {
+//Create User
+const create = async (req, res) => {
   const {
     name, email, username, password,
   } = req.body;
@@ -18,17 +45,26 @@ const create = (req, res) => {
     password,
   };
 
-  const found = users.filter((u) => u.username === user.username); // [], [{}]
+  const findUser = await User.find({ $or: [{ username }, { email }] }, ['email', 'username']);
 
-  if (found && found.length > 0) {
-    res.status(500).json({ message: `ya existe el usuario ${user.username}` });
-  } else {
-    users.push(user);
-    res.status(201).json(users);
+  if (findUser.length > 0) {
+    res.status(500).json({ message: locale.translate('errors.user.userExists') });
+    return;
   }
+
+  const newUser = new User(user);
+  
+  await newUser.save()
+    .then((userCretaed) => {
+      res.status(200).json(userCretaed);
+    })
+    .catch(() => {
+      res.status(500).json({ message: locale.translate('errors.user.onCreate')});
+    });
 };
 
-const update = (req, res) => {
+//Update User
+const update = async (req, res) => {
   const usernameParam = req.params.username;
   const {
     name, email, username, password,
@@ -42,20 +78,25 @@ const update = (req, res) => {
       password,
     };
 
-    const position = users.findIndex((u) => u.username === usernameParam);
+    const userFind = await findUserByUsername(usernameParam);
 
-    if (position !== -1) {
-      users[position] = user;
-      res.status(204).json(users);
+    if (userFind) {
+      const userUpdated = await User.updateOne({ _id: userFind._id },
+        { $set: { name: user.name, email: user.email, password: user.password } });
+
+      userUpdated.ok === 1 
+        ? res.status(204).json()
+        : res.status(500).json({ message: `${locale.translate('errors.user.onUpdate')} ${usernameParam}` });
     } else {
-      res.status(500).json({ message: `No existe el usuario ${usernameParam}` });
+      res.status(500).json({ message: `${locale.translate('errors.user.userNotExist')} ${usernameParam}` });
     }
   } else {
-    res.status(500).json({ message: 'Hay datos nulos' });
+    res.status(500).json({ message: locale.translate('errors.invalidData') });
   }
 };
 
-const login = (req, res) => {
+//Login User
+const login = async (req, res) => {
   const { username, password } = req.body;
 
   const user = {
@@ -63,23 +104,53 @@ const login = (req, res) => {
     password,
   };
 
-  const found = users.filter((u) => u.username === user.username && u.password === user.password);
+  const findUser = await findUserByUsername(user.username);
+  const auth = await validateAuth(findUser, user);
 
-  if (found && found.length > 0) {
-    const token = jwt.sign({ username: user.username }, config.jwtKey);
+  if (auth) {
+    const token = jwt.sign({ userId: findUser._id }, config.jwtKey);
     res.status(200).json({ token });
   } else {
-    res.status(500).json({ message: 'User not exists or user and password don´t match' });
+    res.status(500).json({ message: locale.translate('errors.user.userNotExists') });
   }
 };
 
-const remove = (req, res) => {
+//Remove User
+const remove = async (req, res) => {
   const { username } = req.body;
-  users = users.filter((u) => u.username !== username);
+  const userFind = await findUserByUsername(username);
 
-  res.status(200).json(users);
+  const userDeleted = await User.deleteOne({ _id: userFind._id });
+
+  userDeleted.ok === 1
+    ? res.status(200).json( {message: locale.translate('errors.user.userDeleted') })
+    : res.status(500).json({ message: `${locale.translate('errors.user.onDelete')} ${username}` });
 };
 
+//validate User
+const validateAuth = async (findUser, userReq) =>{  
+  if (findUser) {
+      const compare = bcrypt.compareSync(userReq.password, findUser.password);
+      return compare;
+  } else {
+      return false;
+  }
+};
+
+//Find User By Username
+const findUserByUsername = async (username) => {
+  const userFound = await User.findOne({ username })
+                              .then(user =>{
+                                  return user;
+                              })
+                              .catch( err => {
+                                  console.error(err);
+                              });
+
+  return userFound;
+};
+
+//Export Module
 module.exports = {
   list, create, update, login, remove,
 };

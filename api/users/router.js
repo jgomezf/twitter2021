@@ -3,7 +3,7 @@ const {
   list, create, update, login, remove,
 } = require('./controller');
 const { logger } = require('../middlewares/logger');
-const { validatUser, validateLogin } = require('../middlewares/validator');
+const { validateUser, validateLogin } = require('../middlewares/validator');
 const { authenticator } = require('../middlewares/authenticator');
 const { usersAuthorization } = require('../middlewares/authorization');
 
@@ -12,9 +12,9 @@ const router = express.Router();
 router.use(logger);
 
 router.route('/')
-  .get(authenticator, list)
+  .get(list)
   .delete(authenticator, usersAuthorization, remove)
-  .post(validatUser, create);
+  .post(validateUser, create);
 
 router.route('/login')
   .post(validateLogin, login);

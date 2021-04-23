@@ -6,8 +6,12 @@ const usersAuthorization = (req, res, next) => {
   if (username === authUsername) {
     next();
   } else {
-    res.status(500).json({ message: locale.translate('errors.notAuthorized') });
+    res.status(500).json({ message: locale.translate('errors.user.notAuthorized') });
   }
 };
 
-module.exports = { usersAuthorization };
+const tweetsAuthorization = (req, res, next) => {
+  next();
+};
+
+module.exports = { usersAuthorization, tweetsAuthorization };

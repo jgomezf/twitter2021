@@ -7,15 +7,15 @@ const authenticator = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, config.jwtKey);
-    const username = decoded?.username;
+    const userId = decoded?.userId;
 
-    req.body.authUsername = username;
+    req.body.userId = userId;
 
     next();
   } catch (error) {
     res
       .status(401)
-      .json({ message: locale.translate('errors.userNotAuth') });
+      .json({ message: locale.translate('errors.user.notAuthenticated') });
   }
 };
 
