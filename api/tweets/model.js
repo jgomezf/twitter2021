@@ -2,13 +2,27 @@ const mongoose = require('mongoose');
 
 const collection = 'tweets';
 
-const schema = new mongoose.Schema({
-  content: { type: String, required: true },
-  createdAt: { type: String, required: true },
-  userId: { type: String, required: true },
-  comments: { type: String, required: true },
-});
+const objectSchema = {
+  content: { type: String, required: true },  
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+  comments: [
+    {
+      comment: { type: String},
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+    }
+  ],
+  likes: [
+    {
+      like: { type: Boolean},
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+    }
+  ],
+}
+const options = {
+  timestamps: true,
+}
+const schema = new mongoose.Schema(objectSchema, options);
 
-const model = mongoose.model(collection, schema);
+const Tweet = mongoose.model(collection, schema);
 
-module.exports = { model };
+module.exports = Tweet;

@@ -36,6 +36,25 @@ const validateTweet = (req, res, next) => {
   }
 };
 
+const validateComment = (req, res, next) => {
+  const { comment, tweetId } = req.body;
+  const errors = [];
+
+  if (comment && tweetId) {
+    if (comment.length > 280) {
+      errors.push('max characters exceded');
+    }
+  } else {
+    errors.push('empty data');
+  }
+
+  if (errors.length === 0) {
+    next();
+  } else {
+    res.status(500).json({ message: errors });
+  }
+};
+
 const validateUser = (req, res, next) => {
   const {
     name, email, username, password, passwordConfirmation,
@@ -76,4 +95,4 @@ const validateUser = (req, res, next) => {
   }
 };
 
-module.exports = { validateUser, validateLogin, validateTweet };
+module.exports = { validateUser, validateLogin, validateTweet, validateComment };

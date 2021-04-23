@@ -10,4 +10,8 @@ const usersAuthorization = (req, res, next) => {
   }
 };
 
-module.exports = { usersAuthorization };
+const tweetsAuthorization = (req, res, next) => {
+  next();
+};
+
+module.exports = { usersAuthorization, tweetsAuthorization };

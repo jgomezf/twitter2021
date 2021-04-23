@@ -11,7 +11,15 @@ const dictionaryENUS = {
         onDelete: 'Unable to delete the user ',
         userDeleted: 'User deleted',
         userNotExist: 'There is no user ',
-      }
+      },
+      tweet: {
+        onCreate: 'Unable to create the tweet',
+        onUpdate: 'Unable to update the tweet',
+        onDelete: 'Unable to delete the tweet',
+        tweetCreated: 'Tweet created!',
+        tweetDeleted: 'Tweet deleted',
+        tweetNotExists: 'Tweet not exists',
+      },  
     },
   };
   
