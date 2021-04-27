@@ -18,6 +18,6 @@ router.route('/comments')
   .post(authenticator, validateComment, createComment);
 
 router.route('/likes')
-  .post(authenticator, createlike);
+  .put(authenticator, createlike);
 
 module.exports = router;
