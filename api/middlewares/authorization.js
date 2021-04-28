@@ -6,7 +6,6 @@ const { isAdmin } = require("../services/userService");
 const usersAuthorization = async (req, res, next) => {
   const { userIdAuth } = req.body;
   const userId = req.params.id;
-  console.log(await isAdmin(userIdAuth));
 
   if (userIdAuth === userId) {
     next();
