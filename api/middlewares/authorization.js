@@ -1,12 +1,25 @@
-const { locale } = require('../../locale');
+const jwt = require("jsonwebtoken");
 
-const usersAuthorization = (req, res, next) => {
-  const { username, authUsername } = req.body;
+const { locale } = require("../../locale");
+const { isAdmin } = require("../services/userService");
 
-  if (username === authUsername) {
+const usersAuthorization = async (req, res, next) => {
+  const { userIdAuth } = req.body;
+  const userId = req.params.id;
+  console.log(await isAdmin(userIdAuth));
+
+  if (userIdAuth === userId) {
     next();
   } else {
-    res.status(500).json({ message: locale.translate('errors.user.notAuthorized') });
+    const isAuth = await isAdmin(userIdAuth);
+
+    if (isAuth) {
+      next();
+    } else {
+      res
+        .status(500)
+        .json({ message: locale.translate("errors.user.notAuthorized") });
+    }
   }
 };
 
