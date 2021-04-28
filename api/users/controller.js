@@ -87,11 +87,13 @@ const update = async (req, res) => {
         }
       );
 
-      userUpdated.ok === 1
-        ? res.status(204).json()
-        : res.status(500).json({
-            message: `${locale.translate("errors.user.onUpdate")} ${idParam}`,
-          });
+      if (userUpdated.ok === 1) {
+        res.status(204).json();
+      } else {
+        res.status(500).json({
+          message: `${locale.translate("errors.user.onUpdate")} ${idParam}`,
+        });
+      }
     } else {
       res.status(500).json({
         message: `${locale.translate("errors.user.userNotExist")} ${idParam}`,
@@ -126,18 +128,26 @@ const login = async (req, res) => {
 
 //Remove User
 const remove = async (req, res) => {
-  const { username } = req.body;
-  const userFind = await findUserByUsername(username);
+  const { userId } = req.body;
+  const userFind = await findUserById(userId);
+  if (userFind) {
+    const userDeleted = await User.deleteOne({ _id: userFind._id });
 
-  const userDeleted = await User.deleteOne({ _id: userFind._id });
-
-  userDeleted.ok === 1
-    ? res
+    if (userDeleted.ok === 1) {
+      res
         .status(200)
-        .json({ message: locale.translate("errors.user.userDeleted") })
-    : res.status(500).json({
-        message: `${locale.translate("errors.user.onDelete")} ${username}`,
+        .json({ message: locale.translate("errors.user.userDeleted") });
+    } else {
+      res.status(500).json({
+        message: `${locale.translate("errors.user.onDelete")} 
+      ${userFind.username}`,
       });
+    }
+  } else {
+    res.status(500).json({
+      message: `${locale.translate("errors.user.userNotExist")}`,
+    });
+  }
 };
 
 //validate User

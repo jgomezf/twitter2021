@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken");
 const { locale } = require("../../locale");
 const { isAdmin } = require("../services/userService");
 
-const usersAuthorization = async (req, res, next) => {
+const authorization = async (req, res, next) => {
   const { userIdAuth } = req.body;
-  const userId = req.params.id;
+  const userId = req.params.id || req.body.userId;
 
   if (userIdAuth === userId) {
     next();
@@ -22,8 +22,4 @@ const usersAuthorization = async (req, res, next) => {
   }
 };
 
-const tweetsAuthorization = (req, res, next) => {
-  next();
-};
-
-module.exports = { usersAuthorization, tweetsAuthorization };
+module.exports = { authorization };
