@@ -5,6 +5,7 @@ const { locale } = require("../../locale");
 const { config } = require("../../config");
 const User = require("./model");
 
+//List Users
 const list = async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
@@ -22,7 +23,7 @@ const list = async (req, res) => {
         hasMore,
         totalPages,
         total,
-        users,
+        data: users,
         currentPage: page,
       });
     });
@@ -114,12 +115,28 @@ const login = async (req, res) => {
   };
 
   const findUser = await findUserByUsername(user.username);
+
+  if (condition) {
+    
+  } else {
+    
+  }
   const auth = await validateAuth(findUser, user);
 
   if (auth) {
     const token = jwt.sign({ userIdAuth: findUser._id }, config.jwtKey);
-    res.status(200).json({ token });
+    res
+      .status(200)
+      .cookie("token", token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true })
+      .json({
+        data: {
+          username: findUser.username,
+          name: findUser.name,
+        },
+        message: "ok",
+      });
   } else {
+    console.log("no auth");
     res
       .status(500)
       .json({ message: locale.translate("errors.user.userNotExists") });
