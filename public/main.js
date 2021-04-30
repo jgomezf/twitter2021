@@ -1,3 +1,5 @@
+const cookieParser = require("cookie-parser");
+
 const init = () => {
   const name = localStorage.getItem("name");
   if (name) {
@@ -8,6 +10,7 @@ const init = () => {
     document.getElementById("public").style.display = "block";
   }
 };
+
 const loadTweets = () => {
   const url = "/api/tweets";
   fetch(url)
@@ -89,4 +92,14 @@ const login = () => {
 
       document.getElementById("login_password").value = "";
     });
+};
+
+const logout = () => {
+  const url = "/api/tweets";
+  fetch(url);
+
+  localStorage.clear();
+  document.getElementById("message").innerHTML = "";
+  document.getElementById("public").style.display = "block";
+  document.getElementById("private").style.display = "none";
 };

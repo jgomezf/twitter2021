@@ -1,5 +1,5 @@
 const express = require("express");
-const { list, create, update, login, remove } = require("./controller");
+const { list, create, update, login, logout, remove } = require("./controller");
 const { logger } = require("../middlewares/logger");
 const { validateUser, validateLogin } = require("../middlewares/validator");
 const { authenticator } = require("../middlewares/authenticator");
@@ -18,6 +18,10 @@ router
 router
   .route("/login") //
   .post(validateLogin, login);
+
+router
+  .route("/logout") //
+  .get(logout);
 
 router
   .route("/:id") //

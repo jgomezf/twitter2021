@@ -117,9 +117,7 @@ const login = async (req, res) => {
   const findUser = await findUserByUsername(user.username);
 
   if (condition) {
-    
   } else {
-    
   }
   const auth = await validateAuth(findUser, user);
 
@@ -203,11 +201,16 @@ const findUserById = async (userId) => {
   return userFound;
 };
 
+const logout = (req, res) => {
+  req.clearCookies("token").json({ message: "ok" });
+};
+
 //Export Module
 module.exports = {
   list,
   create,
   update,
-  login,
   remove,
+  login,
+  logout,
 };
