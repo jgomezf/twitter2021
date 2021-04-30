@@ -1,5 +1,3 @@
-const cookieParser = require("cookie-parser");
-
 const init = () => {
   const name = localStorage.getItem("name");
   if (name) {
@@ -95,9 +93,8 @@ const login = () => {
 };
 
 const logout = () => {
-  const url = "/api/tweets";
+  const url = "/api/users/logout";
   fetch(url);
-
   localStorage.clear();
   document.getElementById("message").innerHTML = "";
   document.getElementById("public").style.display = "block";

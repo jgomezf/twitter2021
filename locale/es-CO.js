@@ -4,6 +4,7 @@ const dictionaryESCO = {
     user: {
       notAuthorized: "No autorizado",
       notAuthenticated: "No autenticado",
+      userNotAuthenticated: "Usario y password no coinciden",
       userExists: "Email o username ya se encuentra registrado",
       userNotExists: "Usuario no existe",
       onCreate: "No se pudo crear el usuario",
