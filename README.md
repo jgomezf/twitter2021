@@ -84,6 +84,12 @@ SALT_ROUNDS=
 > yarn add -D nodemon
 ```
 
+## IRun the seeds
+
+```sh
+> yarn run seeds
+```
+
 ## Run the app
 
 ### Without nodemon
