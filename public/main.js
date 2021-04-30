@@ -1,5 +1,3 @@
-const cookieParser = require("cookie-parser");
-
 const init = () => {
   const name = localStorage.getItem("name");
   if (name) {
@@ -13,17 +11,29 @@ const init = () => {
 
 const loadTweets = () => {
   const url = "/api/tweets";
+  const userAuth = localStorage.getItem("username");
+  console.log(userAuth);
   fetch(url)
     .then((res) => res.json())
     .then((json) => {
       const tweets = json?.data;
       let html = ``;
+      console.log(tweets);
       tweets.forEach((tweet) => {
         html += `<li>
-                  <p><a href="users.html?id=${tweet.user?._id}">${tweet.user?.name}</a> says:</p>
+                  <p><a href="users.html?id=${tweet.user?._id}">${
+          tweet.user?.name
+        }</a> says:</p>
                   <p>${tweet.content}</p>
-                  <p><a href="users.html?id=${tweet._id}">comments: ${tweet.comments.length}</a> likes: ${tweet.likes}</p>
+                  <p><a href="users.html?id=${tweet._id}">comments: ${
+          tweet.comments.length
+        }</a> likes: ${tweet.likes}</p>
                   <p>${tweet.createdAt}</p>
+                  <p>${
+                    userAuth === tweet.user?.username
+                      ? `<a href="#id=${tweet?._id}">Eliminar</a>`
+                      : ``
+                  }</p>
                 </li>`;
       });
       document.getElementById("tweets").innerHTML = `<ul>${html}</ul>`;
@@ -95,9 +105,8 @@ const login = () => {
 };
 
 const logout = () => {
-  const url = "/api/tweets";
+  const url = "/api/users/logout";
   fetch(url);
-
   localStorage.clear();
   document.getElementById("message").innerHTML = "";
   document.getElementById("public").style.display = "block";

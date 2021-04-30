@@ -1,6 +1,7 @@
 const { locale } = require("../../locale");
 const Tweet = require("./model");
 
+//list tweet
 const list = (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
@@ -26,6 +27,7 @@ const list = (req, res) => {
     });
 };
 
+//create tweet
 const create = async (req, res) => {
   const { content, userId } = req.body;
 
@@ -48,6 +50,11 @@ const create = async (req, res) => {
     });
 };
 
+//delete tweet
+const remove = async (req, res) => {
+  res.json();
+};
+//create Comment
 const createComment = async (req, res) => {
   const { comment, tweetId, userId } = req.body;
   const comments = {
@@ -67,6 +74,7 @@ const createComment = async (req, res) => {
     });
 };
 
+//creat like
 const createlike = async (req, res) => {
   const { like, tweetId, userId } = req.body;
   const likes = {
@@ -90,4 +98,4 @@ const createlike = async (req, res) => {
     });
 };
 
-module.exports = { list, create, createComment, createlike };
+module.exports = { list, create, remove, createComment, createlike };

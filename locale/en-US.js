@@ -4,6 +4,7 @@ const dictionaryENUS = {
     user: {
       notAuthorized: "unauthorized",
       notAuthenticated: "user not authenticated",
+      userNotAuthenticated: "User and password do not match",
       userExists: "Email or username already registered",
       userNotExists: "User not exists",
       onCreate: "Unable to create the user",
