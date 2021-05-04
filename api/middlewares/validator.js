@@ -1,13 +1,15 @@
+const { locale } = require("../../locale");
+
 const validateLogin = (req, res, next) => {
   const { username, password } = req.body;
   const errors = [];
 
   if (username && password) {
     if (username.length < 6) {
-      errors.push('invalid username');
+      errors.push(locale.translate("errors.validate.invalidUsername"));
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate("errors.validate.emptyData"));
   }
 
   if (errors.length === 0) {
@@ -23,10 +25,10 @@ const validateTweet = (req, res, next) => {
 
   if (content) {
     if (content.length > 280) {
-      errors.push('max characters exceded');
+      errors.push(locale.translate("errors.validate.maxCharactersAllowed"));
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate("errors.validate.emptyData"));
   }
 
   if (errors.length === 0) {
@@ -42,10 +44,10 @@ const validateComment = (req, res, next) => {
 
   if (comment && tweetId) {
     if (comment.length > 280) {
-      errors.push('max characters exceded');
+      errors.push(locale.translate("errors.validate.maxCharactersAllowed"));
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate("errors.validate.emptyData"));
   }
 
   if (errors.length === 0) {
@@ -56,36 +58,36 @@ const validateComment = (req, res, next) => {
 };
 
 const validateUser = (req, res, next) => {
-  const {
-    name, email, username, password, passwordConfirmation,
-  } = req.body;
+  const { name, email, username, password, passwordConfirmation } = req.body;
   const errors = [];
 
   if (name && email && username && password && passwordConfirmation) {
     const regExpEmail = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
-    const regExpPass = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/);
+    const regExpPass = new RegExp(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+    );
 
     if (name.length < 3) {
-      errors.push('invalid name');
+      errors.push(locale.translate("errors.validate.invalidName"));
     }
 
     if (username.length < 6) {
-      errors.push('invalid username');
+      errors.push(locale.translate("errors.validate.invalidUsername"));
     }
 
     if (!regExpEmail.test(email)) {
-      errors.push('invalid email');
+      errors.push(locale.translate("errors.validate.invalidEmail"));
     }
 
     if (!regExpPass.test(password)) {
-      errors.push('invalid password');
+      errors.push(locale.translate("errors.validate.invalidPassword"));
     }
 
     if (password !== passwordConfirmation) {
-      errors.push('password don´t match');
+      errors.push(locale.translate("errors.validate.passwordsDontMatch"));
     }
   } else {
-    errors.push('empty data');
+    errors.push(locale.translate("errors.validate.emptyData"));
   }
 
   if (errors.length === 0) {
@@ -95,4 +97,9 @@ const validateUser = (req, res, next) => {
   }
 };
 
-module.exports = { validateUser, validateLogin, validateTweet, validateComment };
+module.exports = {
+  validateUser,
+  validateLogin,
+  validateTweet,
+  validateComment,
+};

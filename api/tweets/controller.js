@@ -65,12 +65,12 @@ const createComment = async (req, res) => {
     .then((tweetModified) => {
       res
         .status(200)
-        .json({ message: locale.translate("errors.tweet.tweetCreated") });
+        .json({ message: locale.translate("errors.tweet.onCreate") });
     })
     .catch(() => {
       res
         .status(500)
-        .json({ message: locale.translate("errors.tweet.onModified") });
+        .json({ message: locale.translate("errors.tweet.onCreate") });
     });
 };
 
