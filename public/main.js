@@ -4,21 +4,23 @@ const init = () => {
     document.getElementById("welcome").innerHTML = `Bienvenid@, ${name}`;
     loadTweets();
     document.getElementById("private").style.display = "block";
+    document.getElementById("public").style.display = "none";
   } else {
     document.getElementById("public").style.display = "block";
+    document.getElementById("private").style.display = "none";
   }
 };
 
 const loadTweets = () => {
   const url = "/api/tweets";
   const userAuth = localStorage.getItem("username");
-  console.log(userAuth);
+
   fetch(url)
     .then((res) => res.json())
     .then((json) => {
       const tweets = json?.data;
       let html = ``;
-      console.log(tweets);
+
       tweets.forEach((tweet) => {
         html += `<li>
                   <p><a href="users.html?id=${tweet.user?._id}">${
@@ -94,13 +96,35 @@ const login = () => {
         document.getElementById("message").innerHTML = "user authenticated!";
         document.getElementById("login_username").value = "";
         init();
-        document.getElementById("public").style.display = "none";
-        document.getElementById("private").style.display = "block";
       } else {
         document.getElementById("message").innerHTML = json.message;
       }
 
       document.getElementById("login_password").value = "";
+    });
+};
+
+const save = () => {
+  document.getElementById("message").innerHTML = "";
+  const url = "/api/tweets";
+  const tweet = {
+    content: document.getElementById("content").value,
+  };
+
+  const options = {
+    method: "POST",
+    body: JSON.stringify(tweet),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  fetch(url, options)
+    .then((res) => res.json())
+    .then((json) => {
+      document.getElementById("message").innerHTML = "tweet sent!";
+      document.getElementById("content").value = "";
+      loadTweets();
     });
 };
 
