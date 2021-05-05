@@ -101,7 +101,9 @@ const update = async (req, res) => {
       });
     }
   } else {
-    res.status(500).json({ message: locale.translate("errors.invalidData") });
+    res
+      .status(500)
+      .json({ message: locale.translate("errors.validate.emptyData") });
   }
 };
 
@@ -133,7 +135,7 @@ const login = async (req, res) => {
         });
     } else {
       res.status(500).json({
-        message: locale.translate("errors.user.userNotAuthenticated"),
+        message: locale.translate("errors.userNotAuthenticated"),
       });
     }
   } else {
@@ -153,7 +155,7 @@ const remove = async (req, res) => {
     if (userDeleted.ok === 1) {
       res
         .status(200)
-        .json({ message: locale.translate("errors.user.userDeleted") });
+        .json({ message: locale.translate("success.user.userDeleted") });
     } else {
       res.status(500).json({
         message: `${locale.translate("errors.user.onDelete")} 
