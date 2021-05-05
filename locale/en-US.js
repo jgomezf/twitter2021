@@ -1,7 +1,7 @@
 const dictionaryENUS = {
   errors: {
     notAuthorized: "unauthorized",
-    notAuthenticated: "user not authorized",
+    notAuthenticated: "user not authenticated",
     invalidData: "invalid data",
     operationNotAllowed: "Operation not allowed",
     validate: {

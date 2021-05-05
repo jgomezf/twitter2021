@@ -61,7 +61,7 @@ const validateUser = (req, res, next) => {
   const { name, email, username, password, passwordConfirmation } = req.body;
   const errors = [];
 
-  if (name && email && username && password && passwordConfirmation) {
+  if (name && email && password) {
     const regExpEmail = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
     const regExpPass = new RegExp(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
@@ -69,10 +69,6 @@ const validateUser = (req, res, next) => {
 
     if (name.length < 3) {
       errors.push(locale.translate("errors.validate.invalidName"));
-    }
-
-    if (username.length < 6) {
-      errors.push(locale.translate("errors.validate.invalidUsername"));
     }
 
     if (!regExpEmail.test(email)) {
@@ -83,8 +79,18 @@ const validateUser = (req, res, next) => {
       errors.push(locale.translate("errors.validate.invalidPassword"));
     }
 
-    if (password !== passwordConfirmation) {
-      errors.push(locale.translate("errors.validate.passwordsDontMatch"));
+    if (req.method === "POST") {
+      if (username && passwordConfirmation) {
+        if (username.length < 6) {
+          errors.push(locale.translate("errors.validate.invalidUsername"));
+        }
+
+        if (password !== passwordConfirmation) {
+          errors.push(locale.translate("errors.validate.passwordsDontMatch"));
+        }
+      } else {
+        errors.push(locale.translate("errors.validate.emptyData"));
+      }
     }
   } else {
     errors.push(locale.translate("errors.validate.emptyData"));

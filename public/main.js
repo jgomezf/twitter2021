@@ -1,6 +1,5 @@
 const init = () => {
   const name = localStorage.getItem("name");
-  console.log(name);
   if (name) {
     document.getElementById("welcome").innerHTML = `Bienvenid@, ${name}`;
     loadTweets();
