@@ -25,6 +25,6 @@ router
 
 router
   .route("/:id") //
-  .put(authenticator, authorization, update);
+  .put(authenticator, authorization, validateUser, update);
 
 module.exports = router;

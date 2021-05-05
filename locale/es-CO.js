@@ -1,24 +1,42 @@
 const dictionaryESCO = {
   errors: {
+    notAuthorized: "no autorizado",
+    notAuthenticated: "no autenticado",
     invalidData: "datos no válidos",
+    operationNotAllowed: "Operacion no permitida",
+    validate: {
+      maxCharactersAllowed: "se excedió el máximo de caracteres",
+      emptyData: "datos vacíos",
+      invalidUsername: "nombre de usuario no válido",
+      invalidName: "nombre inválido",
+      invalidEmail: "email inválido",
+      passwordsDontMatch: "las contraseñas no coinciden",
+      invalidPassword: "contraseña invalida",
+      invalidRole: "rol invalido",
+    },
     user: {
-      notAuthorized: "No autorizado",
-      notAuthenticated: "No autenticado",
-      userExists: "Email o username ya se encuentra registrado",
-      userNotExists: "Usuario no existe",
-      onCreate: "No se pudo crear el usuario",
-      onUpdate: "No se pudo actualziar el usuario ",
-      onDelete: "No se pudo eliminar el usuario ",
-      userDeleted: "Usuario eliminado",
-      userNotExist: "No existe el usuario ",
+      userExists: "usuario actualmente existe",
+      userNotExists: "usuario no existe",
+      onUpdate: "error al intentar actualizar el usuario",
+      onCreate: "error al intentar crear el usuario",
+      onDelete: "error al intentar eliminar el usuario",
     },
     tweet: {
-      onCreate: "No se pudo crear el usuario",
-      onUpdate: "No se pudo actualziar el usuario ",
-      onDelete: "No se pudo eliminar el usuario ",
-      tweetCreated: "Tweet creado!",
-      tweetDeleted: "Tweet eliminado",
-      tweetNotExists: "Tweet no existe",
+      onDelete: "error al intentar eliminar el tweet",
+      onCreate: "error al intentar crear el tweet"
+    },
+  },
+  success: {
+    user: {
+      onUpdate: "usuario actualizado correctamente",
+      onCreate: "usuario creado exitosamente",
+      onUpdate: "usuario actualizado correctamente",
+      userDeleted: "usuario eliminado correctamente",
+    },
+    tweet: {
+      onCreate: "tweet creado correctamente",
+      onUpdate: "tweet actualizado correctamente",
+      tweetDeleted: "tweet eliminado correctamente",
     },
   },
 };

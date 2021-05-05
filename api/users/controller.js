@@ -101,7 +101,9 @@ const update = async (req, res) => {
       });
     }
   } else {
-    res.status(500).json({ message: locale.translate("errors.invalidData") });
+    res
+      .status(500)
+      .json({ message: locale.translate("errors.validate.emptyData") });
   }
 };
 
@@ -116,25 +118,27 @@ const login = async (req, res) => {
 
   const findUser = await findUserByUsername(user.username);
 
-  if (condition) {
-  } else {
-  }
-  const auth = await validateAuth(findUser, user);
+  if (findUser) {
+    const auth = await validateAuth(findUser, user);
 
-  if (auth) {
-    const token = jwt.sign({ userIdAuth: findUser._id }, config.jwtKey);
-    res
-      .status(200)
-      .cookie("token", token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true })
-      .json({
-        data: {
-          username: findUser.username,
-          name: findUser.name,
-        },
-        message: "ok",
+    if (auth) {
+      const token = jwt.sign({ userIdAuth: findUser._id }, config.jwtKey);
+      res
+        .status(200)
+        .cookie("token", token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true })
+        .json({
+          data: {
+            username: findUser.username,
+            name: findUser.name,
+          },
+          message: "ok",
+        });
+    } else {
+      res.status(500).json({
+        message: locale.translate("errors.userNotAuthenticated"),
       });
+    }
   } else {
-    console.log("no auth");
     res
       .status(500)
       .json({ message: locale.translate("errors.user.userNotExists") });
@@ -151,7 +155,7 @@ const remove = async (req, res) => {
     if (userDeleted.ok === 1) {
       res
         .status(200)
-        .json({ message: locale.translate("errors.user.userDeleted") });
+        .json({ message: locale.translate("success.user.userDeleted") });
     } else {
       res.status(500).json({
         message: `${locale.translate("errors.user.onDelete")} 
@@ -202,7 +206,7 @@ const findUserById = async (userId) => {
 };
 
 const logout = (req, res) => {
-  req.clearCookies("token").json({ message: "ok" });
+  res.clearCookie("token").json({ message: "ok" });
 };
 
 //Export Module
