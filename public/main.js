@@ -1,5 +1,6 @@
 const init = () => {
   const name = localStorage.getItem("name");
+  console.log(name);
   if (name) {
     document.getElementById("welcome").innerHTML = `Bienvenid@, ${name}`;
     loadTweets();
@@ -93,7 +94,7 @@ const login = () => {
         localStorage.setItem("name", json.data.name);
         document.getElementById("message").innerHTML = "user authenticated!";
         document.getElementById("login_username").value = "";
-        loadTweets();
+        init();
         document.getElementById("public").style.display = "none";
         document.getElementById("private").style.display = "block";
       } else {
