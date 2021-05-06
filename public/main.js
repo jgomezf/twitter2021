@@ -6,7 +6,7 @@ const init = () => {
     document.getElementById("private").style.display = "block";
     document.getElementById("public").style.display = "none";
   } else {
-    document.getElementById("public").style.display = "block";
+    document.getElementById("public").style.display = "flex";
     document.getElementById("private").style.display = "none";
   }
 };
