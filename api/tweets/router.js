@@ -9,7 +9,7 @@ const {
 const { logger } = require("../middlewares/logger");
 const { authenticator } = require("../middlewares/authenticator");
 const { validateTweet, validateComment } = require("../middlewares/validator");
-const { authorization } = require("../middlewares/authorization");
+const { tweetsAuthorization } = require("../middlewares/authorization");
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router
   .route("/")
   .get(authenticator, list)
   .post(authenticator, validateTweet, create)
-  .delete(authenticator, authorization, remove);
+  .delete(authenticator, tweetsAuthorization, remove);
 
 router.route("/comments").post(authenticator, validateComment, createComment);
 

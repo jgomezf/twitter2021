@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
+const { verifyIfUserIsOwnsTweet } = require("../services/tweetService");
 
 const { locale } = require("../../locale");
 const { isAdmin } = require("../services/userService");
 
-const authorization = async (req, res, next) => {
+const usersAuthorization = async (req, res, next) => {
   const { userIdAuth } = req.body;
   const userId = req.params.id || req.body.userId;
 
@@ -17,9 +17,23 @@ const authorization = async (req, res, next) => {
     } else {
       res
         .status(500)
-        .json({ message: locale.translate("errors.user.notAuthorized") });
+        .json({ message: locale.translate("errors.operationNotAllowed") });
     }
   }
 };
 
-module.exports = { authorization };
+const tweetsAuthorization = async (req, res, next) => {
+  const { userId, tweetId } = req.body;
+  const result = await verifyIfUserIsOwnsTweet(userId, tweetId);
+  const isAdmin = await isUserAdmin(userId);
+
+  if (result || isAdmin) {
+    next();
+  } else {
+    res.status(403).json({
+      message: locale.translate("errors.operationNotAllowed"),
+    });
+  }
+};
+
+module.exports = { usersAuthorization, tweetsAuthorization };
