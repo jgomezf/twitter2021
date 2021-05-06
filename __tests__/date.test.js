@@ -1,4 +1,4 @@
-const { formatDate } = require("./../libs/date");
+const { formatDate } = require("../libs/date");
 
 describe("format date", () => {
   it("is ok: date, time", () => {
