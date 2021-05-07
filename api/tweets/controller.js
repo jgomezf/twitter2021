@@ -1,5 +1,6 @@
 const { locale } = require("../../locale");
 const Tweet = require("./model");
+const { getTweetsByUsername } = require("../services/twitterService");
 
 //list tweet
 const list = (req, res) => {
@@ -54,6 +55,7 @@ const create = async (req, res) => {
 const remove = async (req, res) => {
   res.json();
 };
+
 //create Comment
 const createComment = async (req, res) => {
   const { comment, tweetId, userId } = req.body;
@@ -98,4 +100,16 @@ const createlike = async (req, res) => {
     });
 };
 
-module.exports = { list, create, remove, createComment, createlike };
+const getExternalTweetsByUsername = async (req, res) => {
+  const { username } = req.params;
+  const tweetsResponse = await getTweetsByUsername(username);
+  const tweets = tweetsResponse.map(({ text, created_at }) => {
+    return {
+      text,
+      created_at,
+    };
+  });
+  res.status(200).json(tweets);
+};
+
+module.exports = { list, create, remove, createComment, createlike, getExternalTweetsByUsername };

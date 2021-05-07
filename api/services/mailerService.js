@@ -1,7 +1,5 @@
 const nodemailer = require("nodemailer");
 const { config } = require("../../config");
-console.log("config.mailer", config.mailer);
-console.log("config.mail", config.mail);
 
 const transporter = nodemailer.createTransport({
   host: config.mailer.host,
