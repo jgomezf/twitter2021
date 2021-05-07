@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const { locale } = require("../../locale");
 const { config } = require("../../config");
 const User = require("./model");
-const { newAccount } = require("../services/mailer");
+const { newAccount } = require("../services/mailerService");
 
 //List Users
 const list = async (req, res) => {

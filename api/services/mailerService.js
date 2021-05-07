@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const { config } = require("./../../config");
+const { config } = require("../../config");
 console.log("config.mailer", config.mailer);
 console.log("config.mail", config.mail);
 
