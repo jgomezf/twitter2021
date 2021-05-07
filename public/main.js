@@ -1,3 +1,4 @@
+const domain = ""; //url del API
 const init = () => {
   const name = localStorage.getItem("name");
   if (name) {
@@ -12,7 +13,7 @@ const init = () => {
 };
 
 const loadTweets = () => {
-  const url = "/api/tweets";
+  const url = `${domain}/api/tweets`;
   const userAuth = localStorage.getItem("username");
 
   fetch(url)
@@ -43,7 +44,7 @@ const loadTweets = () => {
 };
 
 const createUser = () => {
-  const url = "/api/users";
+  const url = `${domain}/api/users`;
   const user = {
     name: document.getElementById("signup_name").value,
     username: document.getElementById("signup_username").value,
@@ -73,7 +74,7 @@ const createUser = () => {
 };
 
 const login = () => {
-  const url = "/api/users/login";
+  const url = `${domain}/api/users/login`;
   const user = {
     username: document.getElementById("login_username").value,
     password: document.getElementById("login_password").value,
@@ -106,7 +107,7 @@ const login = () => {
 
 const save = () => {
   document.getElementById("message").innerHTML = "";
-  const url = "/api/tweets";
+  const url = `${domain}/api/tweets`;
   const tweet = {
     content: document.getElementById("content").value,
   };
@@ -129,7 +130,7 @@ const save = () => {
 };
 
 const logout = () => {
-  const url = "/api/users/logout";
+  const url = `${domain}/api/users/logout`;
   fetch(url);
   localStorage.clear();
   document.getElementById("message").innerHTML = "";
