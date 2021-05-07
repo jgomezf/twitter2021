@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { locale } = require("../../locale");
 const { config } = require("../../config");
 const User = require("./model");
+const { newAccount } = require("../services/mailer");
 
 //List Users
 const list = async (req, res) => {
@@ -57,6 +58,8 @@ const create = async (req, res) => {
   await newUser
     .save()
     .then((userCretaed) => {
+      newAccount(user.email);
+
       res.status(200).json(userCretaed);
     })
     .catch(() => {
