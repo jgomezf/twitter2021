@@ -126,9 +126,14 @@ const login = async (req, res) => {
 
     if (auth) {
       const token = jwt.sign({ userIdAuth: findUser._id }, config.jwtKey);
+      const cookieProps = {
+        domain: "", //url del front
+        maxAge: 60 * 60 * 24 * 1000,
+        httpOnly: true,
+      };
       res
         .status(200)
-        .cookie("token", token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true })
+        .cookie("token", token, cookieProps)
         .json({
           data: {
             username: findUser.username,
