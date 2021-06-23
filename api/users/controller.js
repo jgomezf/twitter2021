@@ -138,6 +138,7 @@ const login = async (req, res) => {
           data: {
             username: findUser.username,
             name: findUser.name,
+            token: token,
           },
           message: "ok",
         });
