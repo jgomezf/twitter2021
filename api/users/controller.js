@@ -30,6 +30,23 @@ const list = async (req, res) => {
     });
 };
 
+//One User
+const getOne = async (req, res) => {
+  const { id } = req.params;
+
+  User.findById({ _id: id, active: true }, [
+    "name",
+    "username",
+    "email",
+    "createdAt",
+    "updatedAt",
+  ]).then(async (user) => {
+    res.status(200).json({
+      data: user,
+    });
+  });
+};
+
 //Create User
 const create = async (req, res) => {
   const { name, email, username, password } = req.body;
@@ -123,6 +140,8 @@ const login = async (req, res) => {
 
   if (findUser) {
     const auth = await validateAuth(findUser, user);
+    // eslint-disable-next-line no-underscore-dangle
+    const userId = findUser._id;
 
     if (auth) {
       const token = jwt.sign({ userIdAuth: findUser._id }, config.jwtKey);
@@ -139,6 +158,7 @@ const login = async (req, res) => {
             id: userId,
             username: findUser.username,
             name: findUser.name,
+            email: findUser.email,
             token: token,
           },
           message: "ok",
@@ -221,6 +241,7 @@ const logout = (req, res) => {
 
 //Export Module
 module.exports = {
+  getOne,
   list,
   create,
   update,

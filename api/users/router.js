@@ -1,5 +1,13 @@
 const express = require("express");
-const { list, create, update, login, logout, remove } = require("./controller");
+const {
+  getOne,
+  list,
+  create,
+  update,
+  login,
+  logout,
+  remove,
+} = require("./controller");
 const { logger } = require("../middlewares/logger");
 const { validateUser, validateLogin } = require("../middlewares/validator");
 const { authenticator } = require("../middlewares/authenticator");
@@ -25,6 +33,7 @@ router
 
 router
   .route("/:id") //
-  .put(authenticator, usersAuthorization, validateUser, update);
+  .put(authenticator, usersAuthorization, validateUser, update)
+  .get(authenticator, getOne);
 
 module.exports = router;
