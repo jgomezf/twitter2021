@@ -34,6 +34,6 @@ router
 router
   .route("/:id") //
   .put(authenticator, usersAuthorization, validateUser, update)
-  .get(authenticator, getOne);
+  .get(getOne);
 
 module.exports = router;

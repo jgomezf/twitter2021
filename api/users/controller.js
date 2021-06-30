@@ -98,7 +98,7 @@ const update = async (req, res) => {
       password,
     };
 
-    const userFind = await findUserById(idParam);
+    let userFind = await findUserById(idParam);
 
     if (userFind) {
       const userUpdated = await User.updateOne(
@@ -109,7 +109,8 @@ const update = async (req, res) => {
       );
 
       if (userUpdated.ok === 1) {
-        res.status(204).json();
+        userFind = await findUserById(idParam);
+        res.status(200).json({ data: userFind });
       } else {
         res.status(500).json({
           message: `${locale.translate("errors.user.onUpdate")} ${idParam}`,
