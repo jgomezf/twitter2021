@@ -76,12 +76,12 @@ const createComment = async (req, res) => {
     .then((tweetModified) => {
       res
         .status(200)
-        .json({ message: locale.translate("errors.tweet.onCreate") });
+        .json({ message: locale.translate("success.comment.onCreate") });
     })
     .catch(() => {
       res
         .status(500)
-        .json({ message: locale.translate("errors.tweet.onCreate") });
+        .json({ message: locale.translate("errors.comment.onCreate") });
     });
 };
 
@@ -113,27 +113,56 @@ const destroyTweet = async (req, res) => {
 };
 
 //create like
-const likes = (req, res) => {
-  const { like, tweetId, userId } = req.body;
-  const likes = {
-    like,
+const likes = async (req, res) => {
+  const { tweetId, userId } = req.body;
+  const newlike = {
+    like: true,
     user: userId,
   };
-
-  Tweet.updateOne(
-    { $and: [{ _id: tweetId }, { "likes.user": userId }] },
-    { $addToSet: { likes } }
-  )
-    .then(() => {
-      res
-        .status(200)
-        .json({ message: locale.translate("errors.tweet.tweetCreated") });
+  const tweet = await Tweet.findOne({
+    _id: tweetId,
+  })
+    .then((tweet) => {
+      return tweet;
     })
-    .catch(() => {
-      res
-        .status(500)
-        .json({ message: locale.translate("errors.tweet.onModified") });
+    .catch((err) => {
+      console.error(err);
     });
+
+  const existLike = tweet.likes.find((l) => l.user.toString() === userId);
+
+  if (existLike) {
+    Tweet.updateOne(
+      { _id: tweetId },
+      { $set: { "likes.$[elem].like": !existLike.like } },
+      { arrayFilters: [{ "elem.user": existLike.user }] }
+    )
+      .then(() => {
+        res
+          .status(200)
+          .json({ message: locale.translate("success.like.onLike") });
+      })
+      .catch(() => {
+        res
+          .status(500)
+          .json({ message: locale.translate("errors.like.onLike") });
+      });
+  } else {
+    const likes = tweet.likes;
+    likes.push(newlike);
+
+    Tweet.updateOne({ _id: tweetId }, { $addToSet: { likes } })
+      .then(() => {
+        res
+          .status(200)
+          .json({ message: locale.translate("success.like.onLike") });
+      })
+      .catch(() => {
+        res
+          .status(500)
+          .json({ message: locale.translate("errors.like.onLike") });
+      });
+  }
 };
 
 const getExternalTweetsByUsername = async (req, res) => {

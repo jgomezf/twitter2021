@@ -23,7 +23,13 @@ const dictionaryESCO = {
     },
     tweet: {
       onDelete: "error al intentar eliminar el tweet",
-      onCreate: "error al intentar crear el tweet"
+      onCreate: "error al intentar crear el tweet",
+    },
+    comment: {
+      onCreate: "error al intentar crear el comentatio",
+    },
+    like: {
+      onLike: "error al inentar actualizar el like",
     },
   },
   success: {
@@ -37,6 +43,12 @@ const dictionaryESCO = {
       onCreate: "tweet creado correctamente",
       onUpdate: "tweet actualizado correctamente",
       tweetDeleted: "tweet eliminado correctamente",
+    },
+    comment: {
+      onCreate: "Commentario creado correctamente",
+    },
+    like: {
+      onLike: "Like actualizado correctametne",
     },
   },
 };

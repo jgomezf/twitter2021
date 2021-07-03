@@ -23,6 +23,13 @@ const dictionaryENUS = {
     },
     tweet: {
       onDelete: "error while deleted tweet",
+      onCreate: "error while created tweet",
+    },
+    comment: {
+      onCreate: "error while created el comment",
+    },
+    like: {
+      onLike: "error while updated like",
     },
   },
   success: {
@@ -36,6 +43,12 @@ const dictionaryENUS = {
       onCreate: "tweet created successfully",
       onUpdate: "tweet updated successfully",
       tweetDeleted: "tweet removed successfully",
+    },
+    comment: {
+      onCreate: "Comment created successfully",
+    },
+    like: {
+      onLike: "Like updated successfully",
     },
   },
 };
